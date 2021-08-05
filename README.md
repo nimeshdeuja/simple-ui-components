@@ -1,17 +1,17 @@
 # simple-ui-react
 
-Simple ui components in react.
+Simple ui components for all reacte basic components like Autocomplete, Button, Dailog and Form all in one package.
 
 ## Install
 
 ```bash
-npm i @ndeuja/simple-ui-react
+npm i simple-ui-components
 ```
 
 ## Tooltip
 
 ```jsx
-import { SimpleTooltip } from "@ndeuja/simple-ui-react";
+import { SimpleTooltip } from "simple-ui-components";
 const { TooltipContainer } = SimpleTooltip;
 
 <Tooltip text="Tooltip Content" placement="left" space={10} disabled={false}>
@@ -24,7 +24,7 @@ const { TooltipContainer } = SimpleTooltip;
 ## Button
 
 ```jsx
-import { Button } from "@ndeuja/simple-ui-react";
+import { Button } from "simple-ui-components";
 
 <Button
   className="myClass"
@@ -39,7 +39,7 @@ import { Button } from "@ndeuja/simple-ui-react";
 ## Dialog
 
 ```jsx
-import {  SimpleDialog } from "@ndeuja/simple-ui-react";
+import {  SimpleDialog } from "simple-ui-components";
 const {Dialog, DialogBody, DialogFooter} = SimpleDialog;
 
 <Dialog
@@ -67,7 +67,7 @@ const {Dialog, DialogBody, DialogFooter} = SimpleDialog;
 ## Autocomplete
 
 ```jsx
-import { Autocomplete, SimpleForm } from "@ndeuja/simple-ui-react";
+import { Autocomplete, SimpleForm } from "simple-ui-components";
 const { InputGroup } = SimpleForm;
 
 <div className="md default">
@@ -109,7 +109,7 @@ const { InputGroup } = SimpleForm;
 ## Form
 
 ```jsx
-import { SimpleForm, SimpleUtility } from "@ndeuja/simple-ui-react";
+import { SimpleForm, SimpleUtility } from "simple-ui-components";
 import ptLocale from "date-fns/locale/pt";
 
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
