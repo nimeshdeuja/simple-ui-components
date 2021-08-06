@@ -1,6 +1,6 @@
 {
   "name": "simple-ui-components",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Simple ui components for all reacte basic components like Autocomplete, Button, Dailog and Form all in one package.",
   "main": "lib/index.js",
   "types": "lib",
@@ -10,7 +10,12 @@
     "test": "react-scripts test",
     "build": "npm run clean & tsc -p . & npm run copy"
   },
-  "keywords": ["Autocomplete", "Button", "Dailog", "Form"],
+  "keywords": [
+    "Autocomplete",
+    "Button",
+    "Dailog",
+    "Form"
+  ],
   "author": "Nimesh Deuja",
   "license": "ISC",
   "peerDependencies": {

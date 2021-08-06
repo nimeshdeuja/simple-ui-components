@@ -3,6 +3,7 @@ import './simpleForm.css'
 import './simpleForm-default.css'
 import './simpleForm-outline.css'
 import Autocomplete from '../Autocomplete/Autocomplete';
+import File from '../File/File';
 
 const showHidePassword = (event:React.MouseEvent<HTMLDivElement, MouseEvent>)=>{
     let elementId = event.currentTarget.id
@@ -61,7 +62,7 @@ export const Form = ({className,layout,size,onSubmit,children}:FormProps) => {
 
 interface InputGroupProps {
   className?:string,
-  type?:'autocomplete'|'checkbox'|'date'|'password'|'radio'|'radio-row'|'select'|'textarea',
+  type?:'autocomplete'|'checkbox'|'date'|'password'|'radio'|'radio-row'|'select'|'textarea'|'file',
   name?:string,
   icon?:any,
   errors?:any,
@@ -114,8 +115,6 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
             </div>
 
     case 'password':
-      let passwordElement = children;
-      if(inputElement) passwordElement = <input {...inputElement} ref={ref} onBlur={SimpleOnBlur} />
       return <div className={`inputField ${myClass}`}>
                   <div className={`holder withIcon`}>      
                     <div
@@ -127,7 +126,7 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
                       <div></div>
                     </div>
                   </div>
-                  {passwordElement}
+                  <input type='password' {...inputElement} ref={ref} onBlur={SimpleOnBlur} />
                   {labelElement}
                   </div>
                   {MessageElement}
@@ -136,7 +135,7 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
       let selectElement = children;
       if(inputElement){
         let selectOptions = inputElement.options && inputElement.options.map((item:any,index:any)=><option key={index} value={item.value}>{item.label}</option>);
-        selectElement = <select ref={ref} {...inputElement}>{selectOptions}</select>
+        selectElement = <select name={name} ref={ref} {...inputElement}>{selectOptions}</select>
       }
       return <div className={`inputField ${myClass}`}>
                 <div className={`holder`}>
@@ -184,6 +183,18 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
               {MessageElement}
             </div>
   
+  case 'file':
+    let file = children
+    if(inputElement){
+      file = <File {...inputElement} ref={ref} />
+    }
+    return <div className={`inputField ${myClass}`}>
+            {placeholder && <span className='title'>{placeholder}</span>}
+            <div className="holder file">
+              {file}
+            </div>
+            {MessageElement}
+          </div>
     default:
       let element = children
       if(inputElement) {

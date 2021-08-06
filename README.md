@@ -161,6 +161,7 @@ const autocompleteChangeHandler = (data: autocompleteType[]) =>
   setData((prev) => UpdateObject(prev, { hobbies: data }));
 const checkboxChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
   setData((prev) => UpdateObject(prev, { [e.target.name]: e.target.checked }));
+const getUploadedFileHandler = (file:File|string|null)=>setData((prev) => UpdateObject(prev, { file: file }))
 
 return (
   <Form
@@ -172,10 +173,8 @@ return (
       name="fullName"
       placeholder="Full Name"
       inputElement={{
-        name: "fullName",
-        type: "text",
-        //className: 'focused',
-        //defaultValue: '',
+        name: "fullName", // must have name
+        type: "text", // must have type
         onChange: inputChangeHandler,
       }}
     />
@@ -196,33 +195,31 @@ return (
       </MuiPickersUtilsProvider>
     </InputGroup>
     <InputGroup
-      name="age"
       placeholder="Age"
       inputElement={{
-        name: "age",
-        type: "number",
+        name: "age", // must have name
+        type: "number", // must have type
         onChange: inputChangeHandler,
       }}
     />
-    <InputGroup name="email" placeholder="Email">
-      <input
-        name="email"
-        type="email"
-        onBlur={SimpleOnBlur}
-        onChange={inputChangeHandler}
-      />
-    </InputGroup>
+    <InputGroup
+      placeholder="Email"
+      inputElement={{
+        name="email" // must have name
+        type: "email", // must have title
+        onChange: inputChangeHandler,
+      }}
+    />
     <InputGroup
       type="select"
-      name="occupation"
+      name="occupation" // must have name
       placeholder="Occupation"
       inputElement={{
-        name: "occupation",
         defaultValue: "Programmer",
         options: [
           { value: "Designer", label: "Designer" },
           { value: "Programmer", label: "Programmer" },
-        ],
+        ], // options must have value and lebel.
         onChange: selectChangeHandler,
       }}
     />
@@ -231,7 +228,7 @@ return (
       name="hobbies"
       placeholder="hobbies"
       inputElement={{
-        id: "hobbies",
+        id: "hobbies", // id should be unique.
         list: [
           {
             value: "Acroyoga",
@@ -240,60 +237,61 @@ return (
           },
           { value: "Conlanging", label: "Conlanging", id: "Conlanging" },
           { value: "Fishfarming", label: "Fishfarming", id: "Fishfarming" },
-        ],
+        ], // list must have value lebel and id.
         change: autocompleteChangeHandler,
         selected: [
           { value: "Fishfarming", label: "Fishfarming", id: "Fishfarming" },
-        ],
-        placeholder: "hobbies...",
-        inputPlaceholder: "search hobbies...",
-        emptyText: "No hobbies to display",
-        multiple: true,
-        clear: true,
+        ], // or undefiend
+        placeholder: "hobbies...", // String | null | undefined
+        inputPlaceholder: "search hobbies...", // String | null | undefined
+        emptyText: "No hobbies to display", // String | null | undefined
+        multiple: true, // true | false | null | undefined
+        clear: true, // true | false | null | undefined
       }}
     />
     <InputGroup
       type="password"
       placeholder="Password"
       inputElement={{
-        type: "password",
-        id: "password",
+        id: "password", // id should be unique.
         autoComplete: "password-new",
         onChange: inputChangeHandler,
       }}
     />
-    <InputGroup type="password" name="rePassword" placeholder="Re-Password">
-      <input
-        name="rePassword"
-        type="password"
-        autoComplete="new-password"
-        id="rePassword"
-        onBlur={SimpleOnBlur}
-        onChange={inputChangeHandler}
-      />
-    </InputGroup>
     <InputGroup
-      type="radio"
-      name="gender"
+      type="radio" // 'radio' | 'radio-row'
+      name="gender" // must have name
       placeholder="Gender"
       inputElement={{
-        name: "gender",
         onChange: inputChangeHandler,
         options: [
           { value: "Mail", label: "Mail" },
           { value: "Femail", label: "Femail" },
-        ],
+        ], // must have value and label
       }}
     />
 
     <InputGroup
       type="checkbox"
-      name="privacy"
+      name="privacy" // must have name
       placeholder="Privacy"
       inputElement={{
-        name: "privacy",
         onChange: checkboxChangeHandler,
         label: "Accept all privacy",
+      }}
+    />
+
+    <InputGroup
+      type="file"
+      placeholder="Upload File"
+      inputElement={{
+        feedbackText: (e: string) =>
+          `Document <u><b>${e}</b></u> has been successfully uploaded.`, // or String | null | undefined
+        labelText: "Upload",
+        id: "myFile", // id should be unique.
+        Uploaded: getUploadedFileHandler,
+        format: "base64", // 'file' | 'base64' | null | undefined
+        clear: true, // true | false | null | undefined
       }}
     />
 
@@ -303,7 +301,7 @@ return (
       placeholder="feedback"
       inputElement={{
         onChange: inputChangeHandler,
-        rows: 10,
+        rows: 10, // Number
       }}
     />
     <input type="submit" onClick={onSubmit} />

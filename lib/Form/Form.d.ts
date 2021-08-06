@@ -21,7 +21,7 @@ interface FormProps {
 export declare const Form: ({ className, layout, size, onSubmit, children }: FormProps) => JSX.Element;
 interface InputGroupProps {
     className?: string;
-    type?: 'autocomplete' | 'checkbox' | 'date' | 'password' | 'radio' | 'radio-row' | 'select' | 'textarea';
+    type?: 'autocomplete' | 'checkbox' | 'date' | 'password' | 'radio' | 'radio-row' | 'select' | 'textarea' | 'file';
     name?: string;
     icon?: any;
     errors?: any;

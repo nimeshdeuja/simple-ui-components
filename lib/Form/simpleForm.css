@@ -566,3 +566,40 @@ input:-ms-input-placeholder {
 .placeholder-select {
   text-transform: capitalize;
 }
+
+.file {
+  margin-top: -15px !important;
+}
+
+.file .uploadFile {
+  width: auto !important;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+.file .uploadFile:hover {
+  background: var(--color);
+  border-color: var(--color);
+  color: var(--background);
+}
+.file .feedback {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.file .feedback span {
+  font-weight: normal;
+  font-family: var(--fontFamily);
+  font-size: var(--fontSize);
+  color: var(--color);
+}
+
+.file .feedback .clear {
+  margin-right: 5px;
+  font-weight: bold;
+  color: var(--red);
+  cursor: pointer;
+}
+.file .feedback .clear:hover {
+  color: var(--color);
+}
