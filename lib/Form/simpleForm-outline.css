@@ -43,6 +43,15 @@
   transform: translateY(-50%);
   transition: top 0.3s ease, font-size 0.3s ease, color 0.3s ease;
 }
+.outline label::after {
+  content: "";
+  position: absolute;
+  top: calc(50% + 0px);
+  left: 0;
+  border-top: 2px solid var(--white);
+  width: 100%;
+  z-index: -1;
+}
 
 .outline textarea {
   margin-top: 0;
@@ -67,14 +76,11 @@
 .outline .focused + .placeholder {
   top: 0 !important;
   color: var(--gray);
-  background-color: var(--white);
-  padding: 0 2px;
 }
 .outline .placeholder-select {
   top: 0 !important;
   pointer-events: none;
   color: var(--gray) !important;
-  background-color: var(--white) !important;
 }
 
 .outline .placeholder-textarea {
@@ -85,7 +91,6 @@
 .outline textarea:focus + .placeholder-textarea {
   top: 0 !important;
   color: var(--gray) !important;
-  background-color: var(--white) !important;
 }
 
 .outline.sm .placeholder {

@@ -1,4 +1,4 @@
-// obj = onject, newObject = Update object and return new object
+// obj = object, newObject = Update object and return new object
 export const UpdateObject = (obj:object, newObject:object) => ({
     ...obj,
     ...newObject,
@@ -14,6 +14,8 @@ export const UpdateArray = (arr:any[], newItem:any) => [
 // arr = array, sortBy = 'string' key name that you want to short, Take 'string' for ascending 'ASC' and for descending 'DESC'
 type Types = 'ASC' | 'DESC'
 export const ShortArray = (arr:any[],  type?:Types, sortBy?:string,)=> {
+
+  if(arr.length === 0) return [];
 
   const orderArrays =(curr:any, prev:any) =>{
     let current = curr;
@@ -64,8 +66,8 @@ export const ShortArray = (arr:any[],  type?:Types, sortBy?:string,)=> {
 export const GetIndexBy = (arr:any[], indexOf:any, indexBy?:string) => {
     let toReturn = -1;
     arr.forEach((item, index) => {
-      let toCompaire = indexBy?item[indexBy]:item;
-        if (toCompaire === indexOf) {
+      let toCompare = indexBy?item[indexBy]:item;
+        if (toCompare === indexOf) {
           toReturn = index;
         }
       });

@@ -13,8 +13,9 @@ interface Props {
     space?: Number;
     children: ReactNode;
     disabled?: boolean;
+    click?: boolean;
 }
-export declare const Tooltip: ({ text, placement, space, children, disabled, }: Props) => JSX.Element;
+export declare const Tooltip: ({ text, placement, space, children, disabled, click }: Props) => JSX.Element;
 export declare const TooltipContainer: () => JSX.Element;
 export {};
 //# sourceMappingURL=Tooltip.d.ts.map

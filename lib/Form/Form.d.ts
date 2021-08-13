@@ -12,20 +12,20 @@ export declare const Message: ({ errors, name }: MessageProps) => JSX.Element | 
 declare type layout = 'default' | 'outline';
 declare type size = 'lg' | 'md' | 'sm';
 interface FormProps {
-    className?: string;
     layout: layout;
     size: size;
-    children: React.ReactNode;
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    children: React.ReactNode;
+    className?: string;
 }
 export declare const Form: ({ className, layout, size, onSubmit, children }: FormProps) => JSX.Element;
 interface InputGroupProps {
     className?: string;
-    type?: 'autocomplete' | 'checkbox' | 'date' | 'password' | 'radio' | 'radio-row' | 'select' | 'textarea' | 'file';
+    type: 'autocomplete' | 'checkbox' | 'date' | 'password' | 'radio' | 'radio-row' | 'select' | 'textarea' | 'file' | 'input';
     name?: string;
     icon?: any;
-    errors?: any;
     placeholder?: string;
+    errors?: any;
     inputElement?: any;
     children?: React.ReactNode;
 }

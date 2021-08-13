@@ -377,12 +377,12 @@ input[type="button"] {
   font-size: 0.7rem;
 }
 
-/* For Materual Ui */
+/* For Material Ui */
 .inputField .MuiTextField-root {
   width: 100% !important;
 }
 
-/* AutoComplet */
+/* AutoComplete */
 .autocomplete {
   position: relative;
   padding: 5px 10px;
@@ -502,6 +502,10 @@ li.selected.single::after {
   padding: 0;
 }
 
+.autocomplete .selected ul li span {
+  font-size: 13px;
+}
+
 .autocomplete .clearAll {
   position: absolute;
   top: calc(50% - 18px);
@@ -517,10 +521,11 @@ li.selected.single::after {
 .autocomplete ul li {
   display: flex;
   align-items: center;
+  line-height: 11px !important;
 }
 .autocomplete ul li div {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   margin-right: 10px;
   display: flex;
   justify-content: center;
@@ -528,8 +533,8 @@ li.selected.single::after {
   border-radius: var(--borderRadius) 0 0 var(--borderRadius);
 }
 .autocomplete ul li div img {
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
 }
 
 .autocomplete ul li.single div {

@@ -49,30 +49,25 @@ export const Message = ({errors,name}:MessageProps) => {
 type layout = 'default'|'outline';
 type size = 'lg'|'md'|'sm';
 interface FormProps {
-  className?:string
   layout:layout,
   size:size,
+  onSubmit:(e:React.FormEvent<HTMLFormElement>)=>void,
   children:React.ReactNode,
-  onSubmit:(e:React.FormEvent<HTMLFormElement>)=>void
+  className?:string
 }
-export const Form = ({className,layout,size,onSubmit,children}:FormProps) => {
-  let myClass = className?className:'';
-  return <form autoComplete="off" onSubmit={onSubmit} className={`${layout} ${size} ${myClass}`}>{children}</form>
-}
+export const Form = ({className='',layout,size,onSubmit,children}:FormProps) => <form autoComplete="off" onSubmit={onSubmit} className={`${layout} ${size} ${className}`}>{children}</form>
 
 interface InputGroupProps {
   className?:string,
-  type?:'autocomplete'|'checkbox'|'date'|'password'|'radio'|'radio-row'|'select'|'textarea'|'file',
+  type:'autocomplete'|'checkbox'|'date'|'password'|'radio'|'radio-row'|'select'|'textarea'|'file'|'input',
   name?:string,
   icon?:any,
-  errors?:any,
   placeholder?:string,
+  errors?:any,
   inputElement?:any,
   children?:React.ReactNode
 }
-export const InputGroup = React.forwardRef(({className, type, name,icon, errors, placeholder,inputElement, children}:InputGroupProps, ref:any)=>{
-  let myClass = className?className:'';
-
+export const InputGroup = React.forwardRef(({className='', type, name,icon, placeholder, errors,inputElement, children}:InputGroupProps, ref:any)=>{
   let MessageElement = <Message errors={errors} name={name} />;
 
   let labelClass = 'placeholder'
@@ -93,17 +88,17 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
 
   switch (type) {
     case 'textarea':
-      let textAteaElement = children;
-      if(inputElement) textAteaElement = <textarea {...inputElement} ref={ref} onKeyUp={SimpleOnBlur}></textarea>;
+      let textAreaElement = children;
+      if(inputElement) textAreaElement = <textarea {...inputElement} ref={ref} onKeyUp={inputElement.onKeyUp?inputElement.onKeyUp:SimpleOnBlur}></textarea>;
 
-      return  <div className={`inputField ${myClass}`}>
-                {textAteaElement}
+      return  <div className={`inputField ${className}`}>
+                {textAreaElement}
                 {labelElement}
                 {MessageElement}
               </div>
 
     case 'date':
-      return <div className={`inputField ${myClass}`}>
+      return <div className={`inputField ${className}`}>
               <div className="focused holder withIcon">
                 {children}
                 <div className="buttonBg">
@@ -115,7 +110,7 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
             </div>
 
     case 'password':
-      return <div className={`inputField ${myClass}`}>
+      return <div className={`inputField ${className}`}>
                   <div className={`holder withIcon`}>      
                     <div
                       className={`buttonBgNoEvent`}
@@ -126,7 +121,7 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
                       <div></div>
                     </div>
                   </div>
-                  <input type='password' {...inputElement} ref={ref} onBlur={SimpleOnBlur} />
+                  <input type='password' {...inputElement} ref={ref} onBlur={inputElement.onBlur?inputElement.onBlur:SimpleOnBlur} />
                   {labelElement}
                   </div>
                   {MessageElement}
@@ -137,7 +132,7 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
         let selectOptions = inputElement.options && inputElement.options.map((item:any,index:any)=><option key={index} value={item.value}>{item.label}</option>);
         selectElement = <select name={name} ref={ref} {...inputElement}>{selectOptions}</select>
       }
-      return <div className={`inputField ${myClass}`}>
+      return <div className={`inputField ${className}`}>
                 <div className={`holder`}>
                   <span className={`arrow`}></span>
                   {selectElement}
@@ -150,7 +145,7 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
       if(inputElement){
         radioElement = inputElement.options && inputElement.options.map((item:any,index:any)=><label key={index}><input name={name} type="radio" {...inputElement} value={item.value} />{item.label}</label>);
       }
-      return  <div className={`inputField ${myClass}`}>
+      return  <div className={`inputField ${className}`}>
                 {placeholder && <span className='title'>{placeholder}</span>}
                 <div className={errorClass}>
                   {radioElement}
@@ -162,7 +157,7 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
       if(inputElement) {
         checkBoxElement = <label><input name={name} type={type} {...inputElement} />{inputElement.label}</label>
       }
-      return  <div className={`inputField ${myClass}`}>
+      return  <div className={`inputField ${className}`}>
                 {placeholder && <span className='title'>{placeholder}</span>}
                 <div className={errorClass}>
                   {checkBoxElement}
@@ -174,7 +169,7 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
       if(inputElement){
         autocompleteElement = <Autocomplete {...inputElement} ref={ref} />
       }
-      return <div className={`inputField ${myClass}`}>
+      return <div className={`inputField ${className}`}>
               <div className="focused holder autocomplete">
                 {autocompleteElement}
                 <span className={`arrow`}></span>
@@ -188,7 +183,7 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
     if(inputElement){
       file = <File {...inputElement} ref={ref} />
     }
-    return <div className={`inputField ${myClass}`}>
+    return <div className={`inputField ${className}`}>
             {placeholder && <span className='title'>{placeholder}</span>}
             <div className="holder file">
               {file}
@@ -198,17 +193,17 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
     default:
       let element = children
       if(inputElement) {
-        element = <input {...inputElement} ref={ref} onBlur={SimpleOnBlur} />
-        if(inputElement.type && inputElement.type === 'number') element = <input {...inputElement} ref={ref} onBlur={SimpleOnBlur} onKeyDown={SimplePreventAlphabet} />
+        element = <input {...inputElement} ref={ref} onBlur={inputElement.onBlur?inputElement.onBlur:SimpleOnBlur} />
+        if(inputElement.type && inputElement.type === 'number') element = <input {...inputElement} step={inputElement.step?inputElement.step:"any"} ref={ref} onBlur={inputElement.onBlur?inputElement.onBlur:SimpleOnBlur} onKeyDown={inputElement.onKeyDown?inputElement.onKeyDown:SimplePreventAlphabet} />
       }
 
-      let toReturn = <div className={`inputField ${myClass}`}>
+      let toReturn = <div className={`inputField ${className}`}>
                       {element}
                       {labelElement}
                       {MessageElement}
                     </div>
       if(icon){
-        toReturn =<div className={`inputField ${myClass}`}>
+        toReturn =<div className={`inputField ${className}`}>
                   <div className={`holder withIcon`}>      
                     <div
                       className={`buttonBg`}
@@ -220,7 +215,6 @@ export const InputGroup = React.forwardRef(({className, type, name,icon, errors,
                   </div>
                   {MessageElement}
                 </div>
-
       }
 
       return toReturn

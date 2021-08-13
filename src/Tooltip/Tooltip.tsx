@@ -72,7 +72,7 @@ const getPoints=(el:any, tt:any, placement:Placement, space:Number)=>{
     let recurCounter = 0;
     const pt = point();
   
-    const bdys = {
+    const box = {
       l: space,
       t: space,
       r: document.body.clientWidth - (tt.clientWidth + space),
@@ -106,8 +106,8 @@ const getPoints=(el:any, tt:any, placement:Placement, space:Number)=>{
           if (recurCounter < 2){
               
             if (
-                (pos.isHorizontal() && (pt.x < bdys.l || pt.x > bdys.r)) ||
-                (pos.isVertical() && (pt.y < bdys.t || pt.y > bdys.b))
+                (pos.isHorizontal() && (pt.x < box.l || pt.x > box.r)) ||
+                (pos.isVertical() && (pt.y < box.t || pt.y > box.b))
               ) {
                 pt.reset(recursive(pos.opposite()));
                 getArrowPoint(pos.opposite(), tt, arrow);
@@ -117,7 +117,7 @@ const getPoints=(el:any, tt:any, placement:Placement, space:Number)=>{
 
           }
 
-          pt.restrictRect(bdys);
+          pt.restrictRect(box);
 
           return pt;
     })(placement);
@@ -131,6 +131,7 @@ interface Props {
   space?:Number,
   children:ReactNode,
   disabled?:boolean,
+  click?:boolean
 }
 export const Tooltip = ({
   text,
@@ -138,6 +139,7 @@ export const Tooltip = ({
   space = 10,
   children,
   disabled=false,
+  click= false
 }:Props) => {
   const handleMOver = (e:any) => {
     const content = document.getElementById(`simple-tooltip`) as HTMLInputElement;
@@ -157,9 +159,14 @@ export const Tooltip = ({
   };
 
   if (disabled) return <span>{children}</span>;
+  if(!click) return React.cloneElement(<span>{children}</span>, {
+    onMouseOver: handleMOver,
+    onMouseOut: handleMOut,
+  });;
   return React.cloneElement(<span>{children}</span>, {
     onMouseOver: handleMOver,
     onMouseOut: handleMOut,
+    onMouseUp:handleMOut
   });
 };
 

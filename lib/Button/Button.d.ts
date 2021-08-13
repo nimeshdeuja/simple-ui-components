@@ -1,16 +1,17 @@
-/// <reference types="react" />
+import React from 'react';
 declare type Types = 'button' | 'submit' | 'reset';
-declare type Thems = 'default' | 'primary' | 'secondary' | 'disabled' | 'danger';
+declare type Themes = 'default' | 'primary' | 'secondary' | 'disabled' | 'danger';
 interface Props {
-    className?: string;
-    theme?: Thems;
-    type: Types;
-    clicked: (item: any) => void;
-    icon?: React.ReactNode;
     text: string;
+    clicked: (item: any) => void;
+    className?: string;
+    theme?: Themes;
+    type: Types;
+    icon?: any;
     fullWidth?: string;
     style?: any;
+    children?: React.ReactNode;
 }
-declare const Button: ({ className, theme, type, clicked, icon, text, fullWidth, style }: Props) => JSX.Element;
+declare const Button: React.ForwardRefExoticComponent<Props & React.RefAttributes<unknown>>;
 export default Button;
 //# sourceMappingURL=Button.d.ts.map

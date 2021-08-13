@@ -1,6 +1,6 @@
 # simple-ui-react
 
-Simple ui components for all reacte basic components like Autocomplete, Button, Dailog and Form all in one package.
+Simple ui components for all react basic components like Autocomplete, Button, Dialog and Form all in one package.
 
 ## Install
 
@@ -14,7 +14,13 @@ npm i simple-ui-components
 import { SimpleTooltip } from "simple-ui-components";
 const { TooltipContainer } = SimpleTooltip;
 
-<Tooltip text="Tooltip Content" placement="left" space={10} disabled={false}>
+<Tooltip
+  text="Tooltip Content"
+  placement="left"
+  space={10}
+  disabled={false}
+  click={true} // if you want to hide tooltip on mouse click
+>
   Hover me
 </Tooltip>;
 
@@ -76,31 +82,40 @@ const { InputGroup } = SimpleForm;
       id="testing"
       list={[
         {
-          label: "Acroyoga",
-          id: "Acroyoga",
+          label: "One",
+          id: "one",
           icon: "https://unprint.pt/static/media/logo.4af0ed03.png",
           color: "#000",
         },
         {
-          label: "Conlanging",
-          id: "Conlanging",
+          label: "Two",
+          id: "two",
           icon: "https://unprint.pt/static/media/logo.4af0ed03.png",
           color: "#000",
         },
         {
-          label: "Fishfarming",
-          id: "Fishfarming",
+          label: "Three",
+          id: "three",
           icon: "https://unprint.pt/static/media/logo.4af0ed03.png",
           color: "#000",
         },
       ]}
       change={() => console.log("change handler")}
+      value={[
+        {
+          label: "Three",
+          id: "three",
+          icon: "https://unprint.pt/static/media/logo.4af0ed03.png",
+          color: "#000",
+        },
+      ]}
       placeholder="Placeholder text"
       inputPlaceholder="Input search placeholder"
       emptyText="List is empty"
       multiple={false}
       clear={true}
       selectedCallback={true}
+      secondaryOption="label" // if you want to add secondary option
     />
   </InputGroup>
 </div>;
@@ -117,14 +132,14 @@ import DateFnsUtils from "@date-io/date-fns";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 type autocompleteType = {
-  value: string,
   label: string,
   id: string | number,
   icon?: string,
+  color?: string
 };
 
 type objectTypes = {
-  dateofBirth?: Date,
+  dateOfBirth?: Date,
   hobbies?: autocompleteType[],
 };
 
@@ -144,9 +159,14 @@ const [data, setData] =
   useState <
   objectTypes >
   {
-    dateofBirth: new Date("2021-07-07"),
+    dateOfBirth: new Date("2021-07-07"),
     hobbies: [
-      { value: "Fishfarming", label: "Fishfarming", id: "Fishfarming" },
+      {
+        label: 'One',
+        id: 'one',
+        icon:'https://unprint.pt/static/media/logo.4af0ed03.png',
+        color:'#000'
+      },
     ],
   };
 
@@ -154,7 +174,7 @@ const onSubmit = () => console.log(data);
 const inputChangeHandler = (e: any) =>
   setData((prev) => UpdateObject(prev, { [e.target.name]: e.target.value }));
 const dateChangeHandler = (date: MaterialUiPickersDate) =>
-  setData((prev) => UpdateObject(prev, { dateofBirth: date }));
+  setData((prev) => UpdateObject(prev, { dateOfBirth: date }));
 const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) =>
   setData((prev) => UpdateObject(prev, { occupation: e.target.value }));
 const autocompleteChangeHandler = (data: autocompleteType[]) =>
@@ -180,16 +200,16 @@ return (
     />
     <InputGroup
       type="date"
-      name="dateofBirth"
-      placeholder="Date of birth meterial"
+      name="dateOfBirth"
+      placeholder="Date of birth material"
     >
       <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
         <DatePicker
-          name="dateofBirth"
+          name="dateOfBirth"
           format="yyyy-MM-dd"
           views={["year", "month", "date"]}
           onChange={dateChangeHandler}
-          value={data.dateofBirth}
+          value={data.dateOfBirth}
           InputProps={{ disableUnderline: true }}
         />
       </MuiPickersUtilsProvider>
@@ -219,7 +239,7 @@ return (
         options: [
           { value: "Designer", label: "Designer" },
           { value: "Programmer", label: "Programmer" },
-        ], // options must have value and lebel.
+        ], // options must have value and label.
         onChange: selectChangeHandler,
       }}
     />
@@ -231,22 +251,20 @@ return (
         id: "hobbies", // id should be unique.
         list: [
           {
-            value: "Acroyoga",
-            label: "Acroyoga",
-            id: "Acroyoga",
+            label: "One",
+            id: "one",
           },
-          { value: "Conlanging", label: "Conlanging", id: "Conlanging" },
-          { value: "Fishfarming", label: "Fishfarming", id: "Fishfarming" },
-        ], // list must have value lebel and id.
+          { label: "Two", id: "two" },
+          { label: "Three", id: "three" },
+        ], // list must have value label and id.
         change: autocompleteChangeHandler,
-        selected: [
-          { value: "Fishfarming", label: "Fishfarming", id: "Fishfarming" },
-        ], // or undefiend
+        value: data.hobbies, // or undefined
         placeholder: "hobbies...", // String | null | undefined
         inputPlaceholder: "search hobbies...", // String | null | undefined
         emptyText: "No hobbies to display", // String | null | undefined
         multiple: true, // true | false | null | undefined
         clear: true, // true | false | null | undefined
+        secondaryOption="label" // if you want to add secondary option or undefined
       }}
     />
     <InputGroup
@@ -265,8 +283,8 @@ return (
       inputElement={{
         onChange: inputChangeHandler,
         options: [
-          { value: "Mail", label: "Mail" },
-          { value: "Femail", label: "Femail" },
+          { value: "Male", label: "Male" },
+          { value: "Female", label: "Female" },
         ], // must have value and label
       }}
     />

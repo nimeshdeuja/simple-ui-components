@@ -1,65 +1,62 @@
 import './Autocomplete.css';
 import { ShortArray, InsertAfter } from '../Utility/Utility';
 
-let simpleObj:any = {}
+// type listTypes ={label:string, id:string|number, icon?:string, color?:string}
+type listTypes = any
+type changeTypes = (e:listTypes[])=>void
 
-type listTypes ={label:string, id:string|number, icon?:string, color?:string}
-type chageTypes = (e:listTypes[])=>void
-
-interface AutocompletProsp {
+interface AutocompleteProps {
     list:listTypes[],
     id:string
-    change:chageTypes,
-    selected?:listTypes[],
+    change:changeTypes,
+    value?:listTypes[],
     placeholder?:string,
     inputPlaceholder?:string,
     emptyText?:string,
     multiple?:boolean,
     clear?:boolean,
-    selectedCallback?:boolean
+    selectedCallback?:boolean,
+    secondaryOption?:string
 }
-const Autocomplete = ({list, id, change, selected,placeholder='Select',inputPlaceholder='Search',emptyText='List is empty',multiple=true,clear=false,selectedCallback=false}:AutocompletProsp) => {
-    const changeHandler = () =>change(simpleObj[id].selected)
-
-    if(selected && !simpleObj[id]){
-        simpleObj[id] = {};
-        simpleObj[id].selected = selected;
-        if(selectedCallback) changeHandler()
+const Autocomplete = ({list, id, change, value=[],placeholder='Select',inputPlaceholder='Search',emptyText='List is empty',multiple=true,clear=false,selectedCallback=false,secondaryOption}:AutocompleteProps) => {
+    let current = {
+        selected: value as listTypes[],
+        list: list as listTypes[],
+        fullList: list as listTypes[],
+        search:'' as string
     }
+
+    const changeHandler = () => change(current.selected)
+
+    if(value && selectedCallback) changeHandler();
 
     const clearAllHide =(type:'add'|'hide')=>{
         let clearAllElement = document.getElementById(id+'clearAll')! as HTMLSpanElement;
-        if(clear && simpleObj[id] && simpleObj[id].selected){
+        if(clear){
             if(type === 'hide'){
-                if(simpleObj[id].selected.length===0) clearAllElement.classList.add('hide');
+                if(current.selected.length===0) clearAllElement.classList.add('hide');
             } else {
-                if(simpleObj[id].selected.length>0) clearAllElement.classList.remove('hide');
+                if(current.selected.length>0) clearAllElement.classList.remove('hide');
             }
         }
         
     }
 
     const deleteClickEvent = (clicked:listTypes)=>{
-        let selected = [];
-        if(simpleObj[id]) selected = simpleObj[id].selected;
-
-        // filter selected list
-        if(!simpleObj[id].selected) simpleObj[id].selected = [] 
-
         let listForSelected = []
-        if(selected.length>0){
-            for (let select of selected){
+        if(current.selected.length>0){
+            for (let select of current.selected){
                 if(select.id !== clicked.id){
                     listForSelected.push(select);
                 }
             }
         }
-        if(simpleObj[id] && simpleObj[id].selected) simpleObj[id].selected = listForSelected;
-        selectedOption();
-        
+        current.selected = listForSelected;
+        generateSelectedOption();
+
         // filter option list
-        simpleObj[id] && simpleObj[id].list && simpleObj[id].list.push(clicked);
-        optionList();
+        current.list.push(clicked);
+        generateOptionList();
 
         clearAllHide('hide');
         
@@ -74,9 +71,7 @@ const Autocomplete = ({list, id, change, selected,placeholder='Select',inputPlac
             if(clear){
                 let clearAllElement = document.createElement('span');
                 clearAllElement.classList.add('clearAll');
-                if(simpleObj[id] && simpleObj[id].selected && simpleObj[id].selected.length === 0){
-                    clearAllElement.classList.add('hide');
-                }
+                if(current.selected.length === 0) clearAllElement.classList.add('hide');
                 clearAllElement.setAttribute('id', id+'clearAll');
                 clearAllElement.innerHTML = 'X';
                 clearAllElement.addEventListener('click', clearAllHandler);
@@ -86,63 +81,38 @@ const Autocomplete = ({list, id, change, selected,placeholder='Select',inputPlac
     }
 
     const selectClickEvent = (clicked:listTypes)=>{
-        let fullList:listTypes[] = [];
-        let list:listTypes[] = [];
-
-        if(simpleObj[id]){
-            fullList = simpleObj[id].fullList;
-            list = simpleObj[id].list;
-        }
-
-        // filter selected list
-        if(!simpleObj[id].selected) simpleObj[id].selected = []
-
         if(multiple){
-            simpleObj[id].selected.push(clicked);
+            current.selected.push(clicked);
         } else {
-            simpleObj[id].selected = [clicked];
+            current.selected = [clicked];
+            closeOptionOnBlanketClick();
         }
-        selectedOption();
-
-        // filter options list
-        if(!simpleObj[id].list) simpleObj[id].list = [];
+        generateSelectedOption();
         
         let listForOption = [];
-        if(multiple){
-            if(list.length>0){
-                for (let option of list){
-                    if(option.id !== clicked.id){
-                        listForOption.push(option);
-                    }
-                }
-            }
-        } else {
-            if(fullList.length>0){
-                for (let option of fullList){
-                    if(option.id !== clicked.id){
-                        listForOption.push(option);
-                    }
+        let currentList = current.fullList;
+        if(multiple) currentList = current.list;
+        if(currentList.length>0){
+            for (let option of currentList){
+                if(option.id !== clicked.id){
+                    listForOption.push(option);
                 }
             }
         }
-        simpleObj[id].list = listForOption;
-        optionList();
+        current.list = listForOption;
+        generateOptionList();
         generateClearAllIcon();
         clearAllHide('add');
         changeHandler();
     }
 
-    const selectedOption =()=>{
+    const generateSelectedOption =()=>{
         let selectedElement = document.getElementById(id+'selected')! as HTMLDivElement;
         selectedElement.innerHTML = '';
 
-        let selected:listTypes[] = [];
-
-        if(simpleObj && simpleObj[id]) selected = simpleObj[id].selected;
-
         let ulElement = document.createElement("ul") as HTMLUListElement;
-        if(selected.length>0){
-            for (let item of selected){
+        if(current.selected.length>0){
+            for (let item of current.selected){
                 let liElement = document.createElement("li") as HTMLLIElement;
                 liElement.classList.add('selected');
                 liElement.setAttribute('data-testid','test-selected-li');
@@ -155,8 +125,18 @@ const Autocomplete = ({list, id, change, selected,placeholder='Select',inputPlac
                     iconElement.setAttribute('alt', item.label);
                     iconWrapper.append(iconElement)
                     liElement.append(iconWrapper);
+                } else {
+                    liElement.classList.add('noIcon');
                 }
-                liElement.append(item.label);
+                let spanElement = document.createElement("span") as HTMLLIElement;
+                spanElement.append(item.label);
+                if(secondaryOption){
+                    let spanElementSecondary = document.createElement("span") as HTMLLIElement;
+                    spanElementSecondary.className = 'secondary'
+                    spanElementSecondary.append(item[secondaryOption]);
+                    spanElement.append(spanElementSecondary);
+                }
+                liElement.append(spanElement);
                 if(multiple)liElement.addEventListener("click", ()=>deleteClickEvent(item));
                 ulElement.append(liElement);
             }
@@ -170,7 +150,7 @@ const Autocomplete = ({list, id, change, selected,placeholder='Select',inputPlac
         selectedElement.append(ulElement);
     }
 
-    const generateEmpty =()=>{
+    const generateEmptyList =()=>{
         let emptyElement = document.createElement("li") as HTMLLIElement;
             emptyElement.setAttribute('data-testid','test-search-list-li');
             emptyElement.classList.add('isEmpty');
@@ -178,54 +158,62 @@ const Autocomplete = ({list, id, change, selected,placeholder='Select',inputPlac
             return emptyElement
     }
 
-    const optionList =()=>{
+    const generateOptionList =()=>{
         let listElement = document.getElementById(id+'list')! as HTMLInputElement;
         listElement.innerHTML = ''
 
-        let list:listTypes[] = [];
-        if(simpleObj[id].list) list = simpleObj[id].list;
-        if(list.length>0) list = ShortArray(list, "ASC", "label");
+        let list = current.list;
+        list = ShortArray(list, "ASC", "label");
 
         let ulElement = document.createElement("ul") as HTMLUListElement;
-        
-        if(list && list.length>0){
-            if(simpleObj[id].input){
-                list = list.filter(({label}:{label:string})=>{
-                    let search = simpleObj[id].input
-                    search = search.toUpperCase();
-                    let text = label.toUpperCase();
-                    return text.includes(search);
-                })
-            }
-            if(list.length>0){
-                for (let item of list){
-                    let liElement = document.createElement("li") as HTMLLIElement;
-                    liElement.setAttribute('data-testid','test-search-list-li');
-                    if(item.icon){
-                        let iconWrapper = document.createElement("div") as HTMLDivElement;
-                        if(item.color) iconWrapper.style.backgroundColor = item.color;
 
-                        let iconElement = document.createElement("img") as HTMLImageElement;
-                        iconElement.setAttribute('src', item.icon);
-                        iconElement.setAttribute('alt', item.label);
-                        
-                        iconWrapper.append(iconElement);
-                        liElement.append(iconWrapper);
-                    }
-                    liElement.append(item.label);
-                    liElement.addEventListener("click", ()=>selectClickEvent(item));
-                    ulElement.append(liElement);
+        if(current.search){
+            list = list.filter((item:listTypes)=>{
+                let search = current.search
+                search = search.toUpperCase();
+                let text = item.label.toUpperCase();
+                let items = text.includes(search);
+                if (!items && secondaryOption) {
+                    let textSecondary = item[secondaryOption].toUpperCase();
+                    items = textSecondary.includes(search);
                 }
-            } else {
-                ulElement.append(generateEmpty());
+                return items;
+            })
+        }
+        if(list.length>0){
+            for (let item of list){
+                let liElement = document.createElement("li") as HTMLLIElement;
+                liElement.setAttribute('data-testid','test-search-list-li');
+                if(item.icon){
+                    let iconWrapper = document.createElement("div") as HTMLDivElement;
+                    if(item.color) iconWrapper.style.backgroundColor = item.color;
+
+                    let iconElement = document.createElement("img") as HTMLImageElement;
+                    iconElement.setAttribute('src', item.icon);
+                    iconElement.setAttribute('alt', item.label);
+                    
+                    iconWrapper.append(iconElement);
+                    liElement.append(iconWrapper);
+                }
+                let spanElement = document.createElement("span") as HTMLLIElement;
+                spanElement.append(item.label);
+                if(secondaryOption){
+                    let spanElementSecondary = document.createElement("span") as HTMLLIElement;
+                    spanElementSecondary.className = 'secondary'
+                    spanElementSecondary.append(item[secondaryOption]);
+                    spanElement.append(spanElementSecondary);
+                }
+                liElement.append(spanElement);
+                liElement.addEventListener("click", ()=>selectClickEvent(item));
+                ulElement.append(liElement);
             }
         } else {
-            ulElement.append(generateEmpty());
+            ulElement.append(generateEmptyList());
         }
         listElement.append(ulElement);
     }
 
-    const closeOption = ()=>{
+    const closeOptionOnBlanketClick = ()=>{
         let searchBox = document.getElementById(id+'search')! as HTMLDivElement;
         let inputElement = document.getElementById(id)! as HTMLInputElement;
         let blanketElement = document.getElementById(id+'blanket')! as HTMLDivElement;
@@ -233,7 +221,7 @@ const Autocomplete = ({list, id, change, selected,placeholder='Select',inputPlac
         blanketElement.remove();
 
         inputElement.value ='';
-        simpleObj[id].input = '';
+        current.search = '';
     }
 
     const generateBlanket=()=>{
@@ -244,27 +232,21 @@ const Autocomplete = ({list, id, change, selected,placeholder='Select',inputPlac
         if(!blanketE){
             divElement.classList.add('blanket');
             divElement.setAttribute("id", `${id}blanket`);
-            divElement.addEventListener("click", ()=>closeOption());
+            divElement.addEventListener("click", ()=>closeOptionOnBlanketClick());
             if(searchBox) InsertAfter(divElement, searchBox);
         }
     }
 
     const filterOptionsList =()=>{
-        let selectedItem:listTypes[] = [];
-
-        if(simpleObj[id].selected) selectedItem = simpleObj[id].selected;
-
-        if(selectedItem && selectedItem.length>0 && selectedItem.length<list.length){
-            return list.filter((elem) => !selectedItem.find(({ id }) => elem.id === id));
-        } else if(selectedItem && selectedItem.length === list.length){
+        if(current.selected.length<list.length){
+            return list.filter((elem) => !current.selected.find(({ id }) => elem.id === id));
+        } else if(current.selected.length === list.length){
             return []
         }
-        return list
+        return current.list
     }
 
-    const clickHandler = ()=>{
-        if(!simpleObj[id]) simpleObj[id] = {};
-        simpleObj[id].fullList = list;
+    const clickOpenListHandler = ()=>{
 
         // UnHide Search Box
         let searchBox = document.getElementById(id+'search')! as HTMLDivElement;
@@ -276,46 +258,42 @@ const Autocomplete = ({list, id, change, selected,placeholder='Select',inputPlac
         let inputElement = document.getElementById(id)! as HTMLInputElement;
         inputElement.focus();
         
-        simpleObj[id].list = filterOptionsList()
-        optionList()
+        if(current.selected.length>0) current.list = filterOptionsList()
+        generateOptionList()
     }
 
     const filterSearch = (event:React.ChangeEvent<HTMLInputElement>) =>{
-        simpleObj[id].input = event.target.value;
-        optionList()
+        current.search = event.target.value;
+        generateOptionList()
     }
 
     const clearAllHandler =()=>{
-       simpleObj[id].selected = []
-       selectedOption();
+       current.selected = []
+       generateSelectedOption();
 
-       simpleObj[id].list = list
-       optionList();
+       current.list = list
+       generateOptionList();
        changeHandler();
 
        clearAllHide('hide');
     }
 
-    let selectedElement = <li className='notSelected' data-testid='test-selected-li'>{placeholder}</li>;
-    if(selected && simpleObj[id] && simpleObj[id].selected && simpleObj[id].selected.length>0){
-        selectedElement = simpleObj[id].selected.map((item:listTypes, i:number)=>{
-            let iconE = <div><img src={item.icon} /></div>
-            if(item.color) iconE = <div style={{backgroundColor:item.color}}><img src={item.icon} /></div>;
-            return <li key={i} data-testid='test-selected-li' className={`selected ${multiple?'':'single'}`} onClick={()=>multiple && deleteClickEvent(item)}>{item.icon && iconE}{item.label}</li>
-        });
-    } 
-    if(simpleObj[id] && simpleObj[id].selected && simpleObj[id].selected.length>0) generateClearAllIcon()
+    if(current.selected.length>0) generateClearAllIcon()
 
     return (
         <>
-            <div id={id+'selected'} data-testid='test-selected' className='selected' onClick={clickHandler}>
-                <ul data-testid='test-selected-ui'>{selectedElement}</ul>
+            <div id={id+'selected'} data-testid='test-selected' className='selected' onClick={clickOpenListHandler}>
+                <ul data-testid='test-selected-ui'>{current.selected.length>0 ? current.selected.map((item:listTypes, i:number)=>{
+            let iconE = <div><img src={item.icon} /></div>
+            if(item.color) iconE = <div style={{backgroundColor:item.color}}><img src={item.icon} /></div>;
+            return <li key={i} data-testid='test-selected-li' className={`selected ${multiple?'':'single'} ${!item.icon}'noIcon':''`} onClick={()=>multiple && deleteClickEvent(item)}>{item.icon && iconE}{item.label}</li>
+        }) : <li className='notSelected' data-testid='test-selected-li'>{placeholder}</li>}</ul>
             </div>
             <div className='search' id={id+'search'} data-testid='test-search' style={{display:'none'}}>
                 <input type='text' placeholder={inputPlaceholder} id={id} data-testid='test-search-input' onChange={filterSearch} />
                 <div id={id+'list'} data-testid='test-search-list'></div>
             </div>
-            {clear && simpleObj[id] && simpleObj[id].selected && simpleObj[id].selected.length>0 && <span id={id+'clearAll'} data-testid='test-clearAll' className='clearAll' onClick={clearAllHandler}>X</span>}
+            {clear && current.selected.length>0 && <span id={id+'clearAll'} data-testid='test-clearAll' className='clearAll' onClick={clearAllHandler}>X</span>}
         </>
     )
 }

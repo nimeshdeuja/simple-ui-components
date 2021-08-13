@@ -1,20 +1,22 @@
+import React from 'react';
 import styles from "./Button.module.css";
 
 type Types = 'button' | 'submit' | 'reset'
-type Thems = 'default' | 'primary' | 'secondary' | 'disabled' | 'danger';
+type Themes = 'default' | 'primary' | 'secondary' | 'disabled' | 'danger';
 
 interface Props {
-    className?:string
-    theme?:Thems,
-    type:Types,
-    clicked:(item:any)=>void,
-    icon?:React.ReactNode,
     text:string,
+    clicked:(item:any)=>void,
+    className?:string
+    theme?:Themes,
+    type:Types,
+    icon?:any,
     fullWidth?:string,
-    style?:any
+    style?:any,
+    children?:React.ReactNode
 }
 
-const Button = ({className, theme='default', type, clicked, icon, text,fullWidth,style}: Props) => {
+const Button = React.forwardRef(({className, theme='default', type, clicked, icon, text,fullWidth,style, children}: Props, ref:any) => {
     let classes = `${styles.button} ${styles[theme]}`;
     if(className) classes = `${styles.button} ${styles[theme]} ${className} ${fullWidth?styles.fullWidth:''}`;
     return <button 
@@ -24,8 +26,9 @@ const Button = ({className, theme='default', type, clicked, icon, text,fullWidth
                 disabled={theme==='disabled'}
                 data-testid='test'
                 style={style}
+                ref={ref}
             >
-                {icon}{text}
+                {children ? children : <>{icon}{text}</>}
             </button>
-}
+})
 export default Button
