@@ -23,10 +23,12 @@ const Autocomplete = ({list, id, change, value=[],placeholder='Select',inputPlac
         selected: value as listTypes[],
         list: list as listTypes[],
         fullList: list as listTypes[],
-        search:'' as string
+        search:'' as string,
+        counter:0 as Number
     }
 
     const changeHandler = () => change(current.selected)
+
 
     if(value && selectedCallback) changeHandler();
 
@@ -160,6 +162,7 @@ const Autocomplete = ({list, id, change, value=[],placeholder='Select',inputPlac
 
     const generateOptionList =()=>{
         let listElement = document.getElementById(id+'list')! as HTMLInputElement;
+        
         listElement.innerHTML = ''
 
         let list = current.list;
@@ -183,7 +186,10 @@ const Autocomplete = ({list, id, change, value=[],placeholder='Select',inputPlac
         if(list.length>0){
             for (let item of list){
                 let liElement = document.createElement("li") as HTMLLIElement;
+                liElement.classList.add(`${id}list-li`)
+                // liElement.classList.add(`active`)
                 liElement.setAttribute('data-testid','test-search-list-li');
+                liElement.setAttribute('id',`${item.id}`);
                 if(item.icon){
                     let iconWrapper = document.createElement("div") as HTMLDivElement;
                     if(item.color) iconWrapper.style.backgroundColor = item.color;
@@ -257,7 +263,51 @@ const Autocomplete = ({list, id, change, value=[],placeholder='Select',inputPlac
    
         let inputElement = document.getElementById(id)! as HTMLInputElement;
         inputElement.focus();
-        
+        /* inputElement.addEventListener('keydown', (e)=> {
+            let items = document.querySelectorAll(`.${id}list-li`);
+            if(e.key === 'ArrowDown'){
+                if(current.counter === 0){
+                    items[0].classList.add('active');
+                    current.counter = 1;
+                } else {
+                    for (let i = 0; i < items.length-1; i++) {
+                        if (items[i].classList.contains('active') === true) {
+                            items[i].classList.remove('active');
+                            items[i+1].classList.add('active');
+                          break;
+                        }
+                      }
+                }
+                
+            }
+            if (e.key === 'ArrowUp') {
+                if(current.counter === 0){
+                    items[items.length - 1].classList.add('active');
+                    current.counter = 1;
+                } else {
+                    for (let i = items.length - 1; i > 0; i--) {
+                        if (items[i].classList.contains('active') === true) {
+                            items[i].classList.remove('active');
+                            items[i-1].classList.add('active');
+                          break;
+                        }
+                      }
+                }
+              }
+
+              if(e.key === 'Enter'){
+                  for (let i = 0; i < items.length; i++){
+                    if (items[i].classList.contains('active') === true) {
+                        let selectedId = items[i].getAttribute('id');
+                        let item = current.list.filter(item=>item.id === selectedId)
+                        selectClickEvent(item[0]);
+                        items[0].classList.add('active');
+                      break;
+                    }
+                  }
+              }
+        });​​​​​​​ */
+
         if(current.selected.length>0) current.list = filterOptionsList()
         generateOptionList()
     }
@@ -286,7 +336,7 @@ const Autocomplete = ({list, id, change, value=[],placeholder='Select',inputPlac
                 <ul data-testid='test-selected-ui'>{current.selected.length>0 ? current.selected.map((item:listTypes, i:number)=>{
             let iconE = <div><img src={item.icon} /></div>
             if(item.color) iconE = <div style={{backgroundColor:item.color}}><img src={item.icon} /></div>;
-            return <li key={i} data-testid='test-selected-li' className={`selected ${multiple?'':'single'} ${!item.icon}'noIcon':''`} onClick={()=>multiple && deleteClickEvent(item)}>{item.icon && iconE}{item.label}</li>
+            return <li key={i} data-testid='test-selected-li' className={`selected ${multiple?'':'single'} ${!item.icon ?'noIcon':''}`} onClick={()=>multiple && deleteClickEvent(item)}>{item.icon && iconE}<span>{item.label}{secondaryOption && <span className='secondary'>{item[secondaryOption]}</span>}</span></li>
         }) : <li className='notSelected' data-testid='test-selected-li'>{placeholder}</li>}</ul>
             </div>
             <div className='search' id={id+'search'} data-testid='test-search' style={{display:'none'}}>

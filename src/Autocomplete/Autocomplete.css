@@ -11,3 +11,7 @@
   color: rgb(180, 180, 180);
   display: block;
 }
+
+li.active {
+  border: 1px solid black !important;
+}

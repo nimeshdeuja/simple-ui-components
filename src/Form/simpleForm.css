@@ -433,22 +433,26 @@ input[type="button"] {
   background: rgba(243, 243, 243, 1);
 }
 .autocomplete .selected {
+  position: relative;
+  padding: 2px 0 0 0;
+}
+/* .autocomplete .selected {
   padding: 3px 0;
   position: relative;
-}
+} */
 .autocomplete .selected ul {
   list-style: none;
   margin: 0;
   padding: 0 50px 0 0;
   display: flex;
   flex-wrap: wrap;
+  height: 100%;
 }
 .autocomplete .selected ul li {
   list-style: none;
   border: var(--borderColor);
   cursor: pointer;
   margin-right: 5px;
-  margin-top: 1px;
   margin-bottom: 1px;
   color: var(--arrowColor);
   border-radius: var(--borderRadius);
@@ -456,7 +460,6 @@ input[type="button"] {
 li.notSelected {
   color: var(--gray) !important;
   text-transform: capitalize;
-  margin-top: 5px !important;
 }
 li.notSelected,
 li.selected.single {
@@ -607,4 +610,8 @@ input:-ms-input-placeholder {
 }
 .file .feedback .clear:hover {
   color: var(--color);
+}
+
+.md .notSelected {
+  min-height: 29px;
 }

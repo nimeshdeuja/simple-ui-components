@@ -59,7 +59,7 @@
 
 .outline .placeholder {
   position: absolute;
-  left: 10px;
+  left: 11px;
   top: 0;
   color: var(--color);
   pointer-events: none;
