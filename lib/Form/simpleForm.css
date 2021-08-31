@@ -130,12 +130,6 @@ input:-webkit-autofill {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-/* .arrow::before {
-  border-left: var(--size) solid transparent;
-  border-right: var(--size) solid transparent;
-  border-bottom: var(--size) solid var(--arrowColor);
-  top: 35%;
-} */
 .arrow::after {
   border-left: var(--size) solid transparent;
   border-right: var(--size) solid transparent;
@@ -188,7 +182,7 @@ input:-webkit-autofill {
 .buttonBg {
   position: absolute;
   top: 0;
-  right: 0;
+  right: 5px;
   width: 30px;
   height: 100%;
   background: transparent;
@@ -205,7 +199,7 @@ input:-webkit-autofill {
 .buttonBgNoEvent {
   position: absolute;
   top: 0;
-  right: 0;
+  right: 5px;
   width: 30px;
   height: 100%;
   display: flex;
@@ -247,12 +241,19 @@ input:-webkit-autofill {
 }
 
 .error,
-.error * {
+.error *,
+.error .buttonBg > svg {
   color: var(--red) !important;
 }
 .error input {
   border: 1px solid var(--red) !important;
-  /* appearance: unset !important; */
+}
+.error .eye {
+  border-color: var(--red) !important;
+}
+.error .eye::before {
+  border-color: var(--red) !important;
+  background: var(--red) !important;
 }
 
 .lg input {
@@ -436,10 +437,6 @@ input[type="button"] {
   position: relative;
   padding: 2px 0 0 0;
 }
-/* .autocomplete .selected {
-  padding: 3px 0;
-  position: relative;
-} */
 .autocomplete .selected ul {
   list-style: none;
   margin: 0;
