@@ -1,6 +1,6 @@
 {
   "name": "simple-ui-components",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "description": "Simple ui components for all react basic components like Autocomplete, Button, Dialog and Form all in one package.",
   "main": "lib/index.js",
   "types": "lib",
