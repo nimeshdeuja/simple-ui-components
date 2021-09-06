@@ -1,11 +1,11 @@
-# simple-ui-react
+# simple-ui-components
 
 Simple ui components for all react basic components like Autocomplete, Button, Dialog and Form all in one package.
 
 ## Install
 
 ```bash
-npm i simple-ui-components
+npm i simple-ui-components@latest
 ```
 
 ## Tooltip
