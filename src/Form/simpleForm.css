@@ -356,6 +356,8 @@ input[type="button"] {
 .check label {
   position: unset !important;
   cursor: pointer;
+  transform: unset !important;
+  transition: unset !important;
 }
 .check label input {
   margin-right: 10px !important;
