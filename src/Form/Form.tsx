@@ -143,7 +143,7 @@ export const InputGroup = React.forwardRef(({className='', type, name,icon, plac
     case 'radio': case 'radio-row':
       let radioElement = children;
       if(inputElement){
-        radioElement = inputElement.options && inputElement.options.map((item:any,index:any)=><label key={index}><input name={name} type="radio" {...inputElement} value={item.value} />{item.label}</label>);
+        radioElement = inputElement.options && inputElement.options.map((item:any,index:any)=><label key={index}><input name={name} type="radio"  ref={ref} {...inputElement} value={item.value} />{item.label}</label>);
       }
       return  <div className={`inputField ${className}`}>
                 {placeholder && <span className='title'>{placeholder}</span>}
@@ -155,7 +155,7 @@ export const InputGroup = React.forwardRef(({className='', type, name,icon, plac
     case 'checkbox':
       let checkBoxElement = children;
       if(inputElement) {
-        checkBoxElement = <label><input name={name} type={type} {...inputElement} />{inputElement.label}</label>
+        checkBoxElement = <label><input name={name} type={type} ref={ref} {...inputElement} />{inputElement.label}</label>
       }
       return  <div className={`inputField ${className}`}>
                 {placeholder && <span className='title'>{placeholder}</span>}
